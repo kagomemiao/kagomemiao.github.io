@@ -1,0 +1,3 @@
+[submodule "themes/next"]
+    path = themes/next
+    url = git://github.com/kagomemiao/My_NexT_Theme.git
