@@ -4,7 +4,7 @@
 
 # Site
 title: Katerina Wang
-subtitle: 技术与生活
+subtitle: Everybody's doing it so why d hell should I?
 description: a personal blog about tech and life
 author: Katerina Wang
 language: zh-Hans
@@ -88,3 +88,8 @@ algolia:
 marked:
   gfm: true
   breaks: false
+
+flowchart:
+  # raphael:   # optional, the source url of raphael.js
+  # flowchart: # optional, the source url of flowchart.js
+  options: # options used for `drawSVG`
