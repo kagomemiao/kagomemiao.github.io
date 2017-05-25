@@ -78,12 +78,17 @@ branch: master
 
 #Algolia earch
 ## Site: https://www.algolia.com
-algolia:
-  applicationID: 'TEV2OOFSE0'
-  apiKey: 'dad8b64f262bc94101fce519798c7b97'
-  adminApiKey: '269d5b2877e86ab20756a16e3759f567'
-  indexName: 'git_BLOG'
-  chunkSize: 5000
+# algolia:
+#   applicationID: 'TEV2OOFSE0'
+#   apiKey: 'dad8b64f262bc94101fce519798c7b97'
+#   adminApiKey: '269d5b2877e86ab20756a16e3759f567'
+#   indexName: 'git_BLOG'
+#   chunkSize: 5000
+search:
+  path: search.xml
+  field: post
+  format: html
+  limit: 10000
 
 marked:
   gfm: true
