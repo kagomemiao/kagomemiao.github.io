@@ -76,7 +76,7 @@ deploy:
   repo: https://github.com/kagomemiao/kagomemiao.github.io
 branch: master
 
-#Algolia earch
+#Algolia Search
 ## Site: https://www.algolia.com
 # algolia:
 #   applicationID: 'TEV2OOFSE0'

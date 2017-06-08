@@ -5,6 +5,12 @@ tags: logs
 sticky: Sticky
 ---
 ## <center><font size=13px color="#b33054">-- 2017 --</font></center>
+### **6/8**
+>- 使用node.js，[express.js](http://expressjs.com/zh-cn/)框架和jade模板搭建网站
+>- [bootstrap](http://www.bootcss.com/) 真不错
+
+### **6/1** <small> 儿童节 </small>
+>- 学习[jade模板引擎语法](http://blog.jayself.com/2014/07/28/Jade/)
 
 ### **5/25**
 >- 添加[自定义站内搜索](https://github.com/iissnan/hexo-theme-next/wiki/%E8%87%AA%E5%AE%9A%E4%B9%89%E7%AB%99%E5%86%85%E6%90%9C%E7%B4%A2)
