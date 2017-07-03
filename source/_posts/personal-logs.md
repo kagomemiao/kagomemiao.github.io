@@ -3,9 +3,13 @@ title: 关于个人和网站的一些记录
 date: 2017-05-24 17:17:18
 tags: logs
 sticky: Sticky
+toc_number: false
 ---
 ## <center><font size=13px color="#b33054">-- 2017 --</font></center>
-### **6/8**
+### **6/20**
+>- next主题自定义无序列表 [issue#451](https://github.com/iissnan/hexo-theme-next/pull/451) - toc_number: true/false
+
+### **6/8** <small>other site</small>
 >- 使用node.js，[express.js](http://expressjs.com/zh-cn/)框架和jade模板搭建网站
 >- [bootstrap](http://www.bootcss.com/) 真不错
 
