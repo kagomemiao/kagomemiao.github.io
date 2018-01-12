@@ -9,7 +9,7 @@ toc_number: false
 ### **6/20**
 >- next主题自定义无序列表 [issue#451](https://github.com/iissnan/hexo-theme-next/pull/451) - toc_number: true/false
 
-### **6/8** <small>other site</small>
+### **6/8** <small>[adswiki.net] - contact</small>
 >- 使用node.js，[express.js](http://expressjs.com/zh-cn/)框架和jade模板搭建网站
 >- [bootstrap](http://www.bootcss.com/) 真不错
 
