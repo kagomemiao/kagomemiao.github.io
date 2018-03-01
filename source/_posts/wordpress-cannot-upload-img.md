@@ -6,7 +6,7 @@ categories:
   - wordpress
 tags:
   - wordpress
-  - 解决方法
+  - 解决办法
 ---
 
 在本地是用apache进行调试的，然后搬到nginx搭建的服务器上，就会出现wordpress无法上传图片、安装插件和更新的问题。

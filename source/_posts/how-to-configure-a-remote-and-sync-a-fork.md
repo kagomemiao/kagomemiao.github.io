@@ -1,5 +1,5 @@
 ---
-title: github关联同步远程fork源
+title: github创建submodule以及关联同步远程fork源
 date: 2018-2-28 16:37:27
 tags:
  - github

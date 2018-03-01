@@ -7,7 +7,7 @@ title: Katerina Wang
 subtitle: "> My ghost, where'd you go?"
 description: a personal blog about tech and life
 author: Katerina Wang
-language: zh-Hans
+language: zh-CN
 timezone:
 
 # URL
@@ -67,7 +67,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: next
+theme: next-reloaded
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html

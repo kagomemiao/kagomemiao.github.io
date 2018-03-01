@@ -6,7 +6,7 @@ categories:
   - wordpress
 tags: 
   - wordpress
-  - 解决方法
+  - 解决办法
 ---
 ## wordpress博客在安装插件时提示需要输入FTP信息的解决办法：
 

@@ -7,7 +7,7 @@ categories:
 tags:
   - wordpress
   - wordpress page templates
-  - 解决方法
+  - 解决办法
 ---
 在编辑wp站点的时候，我发现站点页面编辑器的模板选项不见了
 
