@@ -97,4 +97,5 @@ From https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY
 2. [git中本地与远程库的关联与取消](http://blog.csdn.net/wsycsdn19930512/article/details/50574217)  
 3. [[Git] 如何优雅的删除子模块](https://www.jianshu.com/p/ed0cb6c75e25)  
 4. [【Git】子模块: 一个仓库包含另一个仓库](https://www.jianshu.com/p/491609b1c426)  
-5. [同步一个 fork](https://gaohaoyang.github.io/2015/04/12/Syncing-a-fork/)  
+5. [同步一个 fork](https://gaohaoyang.github.io/2015/04/12/Syncing-a-fork/)
+6. [Git submodule add: “a git directory is found locally” issue](https://stackoverflow.com/questions/20929336/git-submodule-add-a-git-directory-is-found-locally-issue)
