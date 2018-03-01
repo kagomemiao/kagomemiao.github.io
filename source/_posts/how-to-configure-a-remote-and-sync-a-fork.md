@@ -59,18 +59,18 @@ A git directory is found locally with remote(s)
 4. 之后再进行`git submodule add...`
   
 ### 添加上游仓库  
-首先进入到该submodule目录查看远程状态:  
+1. 首先进入到该submodule目录查看远程状态:  
 ```git
 cd your/submodule
 git remote -v
 # origin  https://github.com/YOUR_USERNAME/YOUR_FORK.git (fetch)
 # origin  https://github.com/YOUR_USERNAME/YOUR_FORK.git (push)
 ```
-添加fork源仓库: 
+2. 添加fork源仓库: 
 ```git
 git remote add upstream https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY.git
 ```
-查看是否配置成功:   
+3. 查看是否配置成功:   
 ```git
 git remote -v
 # origin    https://github.com/YOUR_USERNAME/YOUR_FORK.git (fetch)
@@ -91,7 +91,7 @@ From https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY
 之后再push到远程仓库中: `git push origin master`  
 
   
-参考:   
+### 参考:   
 1. [Add a submodule which can't be removed from the index
 ](https://stackoverflow.com/questions/12218420/add-a-submodule-which-cant-be-removed-from-the-index/39189599)  
 2. [git中本地与远程库的关联与取消](http://blog.csdn.net/wsycsdn19930512/article/details/50574217)  
