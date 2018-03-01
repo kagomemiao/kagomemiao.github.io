@@ -3,4 +3,4 @@
 	url = https://github.com/kagomemiao/theme-next.git
 [submodule "themes/next-reloaded"]
 	path = themes/next-reloaded
-	url = git@github.com:kagomemiao/next-reloaded.git
+	url = https://github.com:kagomemiao/next-reloaded.git
