@@ -13,7 +13,7 @@ NexT更新到v6.0了，通过作者的[Update from NexT v5.1.x](https://github.c
 现在觉得既然fork过来，那么以后就可以同步源了  
 ### fork源仓库  
 这个很简单，可以直接通过网页右上角的fork到自己的repo，就略过了  
-### 本地添加远程仓库  
+~~### 本地添加远程仓库  ~~
 ~~本地先新建directory/文件夹，在该路径下`git init`  
  添加远程仓库`git remote add <origin> <git@github.com:remote/repo.git>` 这里origin是远程仓库的名字，后面是远程仓库的地址  
  再把远程仓库同步到本地`git pull origin master`~~
