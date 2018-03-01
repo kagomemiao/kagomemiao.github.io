@@ -41,8 +41,9 @@ mod_name是该子模块的目录名
 提交子模块到远程仓库：`git commit -m "added <name> submodule"`  
   
 ### 添加上游仓库  
-首先查看远程状态:  
+首先进入到该submodule目录查看远程状态:  
 ```git
+cd your/submodule
 git remote -v
 # origin  https://github.com/YOUR_USERNAME/YOUR_FORK.git (fetch)
 # origin  https://github.com/YOUR_USERNAME/YOUR_FORK.git (push)
