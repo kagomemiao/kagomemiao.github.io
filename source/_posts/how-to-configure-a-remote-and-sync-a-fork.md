@@ -17,24 +17,29 @@ NexT更新到v6.0了，通过作者的[Update from NexT v5.1.x](https://github.c
 ~~本地先新建directory/文件夹，在该路径下`git init`  
  添加远程仓库`git remote add <origin> <git@github.com:remote/repo.git>` 这里origin是远程仓库的名字，后面是远程仓库的地址  
  再把远程仓库同步到本地`git pull origin master`~~
-### 主仓库项目添加submodule   
+### 主仓库项目添加s子模块(ubmodule )  
 <small>
-最开始添加了远程仓库然后加子模块(submodule)，发现git直接把整个目录clone下来了，并且文件是在以repo命名的文件夹下，所以创建子模块一定是要在上一级路径下，比如我的子模块是next的主题，那么就要在theme这个文件夹下创建  
+~~最开始添加了远程仓库然后加子模块，发现git直接把整个目录clone下来了，并且文件是在以repo命名的文件夹下，所以创建子模块一定是要在上一级路径下，比如我的子模块是next的主题，那么就要在theme这个文件夹下创建~~  
 由于一开始创建错误，需要删除掉该子模块：  
 `git submodule deinit -f <mod_name>`  
 mod_name是该子模块的目录名  
 由于我还没有添加模块信息，所以不需要进行`git rm -cached <mod_name>`删除.gitmodule中的记录
 </small>
-### 添加子模块  
-`git submodule add <git@github.com...>` 
-出现了  
+#### 添加子模块  
+后来发现由于我的理解失误，其实子模块应该是创建在主项目路径下的
+由于一开始理解错误，在theme这个文件夹下创建了submodule导致了子模块创建在了另一个主题下，然后我只好进行[代码回滚](http://katerina.wang/2018/03/01/git-revert-tips/).  
+
+`git submodule add <git@github.com...> local/directory`  
+
+如果出现了  
 ```bash
 'repo' already exists in the index
 ```
 两种解决办法：  
 1.换个没起过的名字
 2.unstage之前添加的submodule：`git rm -r <repo-name>`，不管出现什么提示，之后再进行`git submodule add`就没有问题了  
-提交子模块到远程仓库：`git commit -am "added <name> submodule"`
+提交子模块到远程仓库：`git commit -m "added <name> submodule"`  
+  
 ### 添加上游仓库  
 首先查看远程状态:  
 ```git
