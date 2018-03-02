@@ -17,7 +17,7 @@ NexT更新到v6.0了，通过作者的[Update from NexT v5.1.x](https://github.c
 ~~本地先新建directory/文件夹，在该路径下`git init`  
  添加远程仓库`git remote add <origin> <git@github.com:remote/repo.git>` 这里origin是远程仓库的名字，后面是远程仓库的地址  
  再把远程仓库同步到本地`git pull origin master`~~
-### 主仓库项目添加s子模块(ubmodule )  
+### 主仓库项目添加子模块(submodule)
 <small>
 ~~最开始添加了远程仓库然后加子模块，发现git直接把整个目录clone下来了，并且文件是在以repo命名的文件夹下，所以创建子模块一定是要在上一级路径下，比如我的子模块是next的主题，那么就要在theme这个文件夹下创建~~  
 由于一开始创建错误，需要删除掉该子模块:   
