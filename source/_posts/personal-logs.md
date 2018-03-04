@@ -5,7 +5,13 @@ tags: logs
 sticky: Sticky
 toc_number: false
 ---
-## <center><font size=13px color="#b33054">-- 2017 --</font></center>
+## <center><font size=13px color="#b33054">-- 2018 --</font></center>
+### **3/2** <small> 元宵节 </small>
+>- 添加[网站运行时间到侧边栏](https://reuixiy.github.io/technology/computer/computer-aided-art/2017/06/09/hexo-next-optimization.html#%E4%BE%A7%E6%A0%8F%E5%8A%A0%E5%85%A5%E5%B7%B2%E8%BF%90%E8%A1%8C%E7%9A%84%E6%97%B6%E9%97%B4)
+### **3/1**
+>- 更新[NexT主题v6.0.x](https://github.com/theme-next/hexo-theme-next)
+
+## <center><font size=13px color="#777">-- 2017 --</font></center>
 ### **6/20**
 >- next主题自定义无序列表 [issue#451](https://github.com/iissnan/hexo-theme-next/pull/451) - toc_number: true/false
 
