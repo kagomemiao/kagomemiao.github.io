@@ -1,6 +1,6 @@
 ---
 title: mysql忘记密码
-date: 
+date: 2018-3-20 16:52:24
 tags:
  - server
  - 解决办法
