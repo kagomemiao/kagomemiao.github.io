@@ -98,3 +98,8 @@ flowchart:
   # raphael:   # optional, the source url of raphael.js
   # flowchart: # optional, the source url of flowchart.js
   options: # options used for `drawSVG`
+
+image_stream:
+  jquery: false
+  jquery_lazyload: //cdn.bootcss.com/jquery.lazyload/1.9.1/jquery.lazyload.min.js
+  img_placeholder: https://ws4.sinaimg.cn/large/e724cbefgw1etyppy7bgwg2001001017.gif
