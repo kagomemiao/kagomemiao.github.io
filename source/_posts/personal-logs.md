@@ -6,6 +6,10 @@ sticky: Sticky
 toc_number: false
 ---
 ## <center><font size=13px color="#b33054">-- 2018 --</font></center>
+### **4/2**
+>- 添加动态[live2d模型](https://github.com/EYHN/hexo-helper-live2d)
+>- 添加个人豆瓣列表[hexo-douban](https://github.com/mythsman/hexo-douban)
+>- live2d[模型列表](https://github.com/xiaoski/live2d_models_collection)
 ### **3/2** <small> 元宵节 </small>
 >- 添加[网站运行时间到侧边栏](https://reuixiy.github.io/technology/computer/computer-aided-art/2017/06/09/hexo-next-optimization.html#%E4%BE%A7%E6%A0%8F%E5%8A%A0%E5%85%A5%E5%B7%B2%E8%BF%90%E8%A1%8C%E7%9A%84%E6%97%B6%E9%97%B4)
 ### **3/1**
