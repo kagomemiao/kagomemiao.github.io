@@ -103,7 +103,7 @@ flowchart:
 live2d:
   enable: true
   model:
-    use: live2d-widget-model-shizuku
+    use: shizuku
   display:
     position: right
   mobile:
