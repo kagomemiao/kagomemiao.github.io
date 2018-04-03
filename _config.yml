@@ -99,6 +99,20 @@ flowchart:
   # flowchart: # optional, the source url of flowchart.js
   options: # options used for `drawSVG`
 
+#addons
+#douban
+douban:
+  user: narcissus.sin
+  book:
+    title: '读书'
+    quote: '读万卷书 行万里路'
+  movie:
+    title: '电影'
+    quote: '别人的故事 自己的人生'
+  game:
+    title: '游戏'
+    quote: '劳逸结合'
+  #timeout: 10000
 #live2d
 live2d:
   enable: true
