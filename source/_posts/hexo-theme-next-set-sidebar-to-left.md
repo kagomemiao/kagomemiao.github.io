@@ -62,4 +62,15 @@ tags:
       close: {width: '100%', rotateZ: '45deg', top: '-5px'}
     }
   });
-```
+```   
+   
+<small>--- 2018年4月4日更新 ---</small>
+#### 容器选择
+由于想美化侧边栏，把它弄成半透明的，然后发现不管怎么调整都还是不透明   
+后来发现问题出在之前修改的`motion.js`上面   
+由于选择器是body，所以当展开左侧侧边栏时，把body同时向右压缩以适应页面  
+这样就导致了侧边栏透明度不管怎么调整都还是不透明，因为下面是`body`的背景色而并不是侧边栏不能调整透明   
+所以我就把motion.js中选择的两个`body`改成了`.container`  
+`NexT.utils.isDesktop() && $('.container').velocity('stop')`
+   
+   
