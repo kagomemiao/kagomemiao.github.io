@@ -8,7 +8,6 @@ tags:
 categories: 
  - hack
  - adobe
-permalink: how-to-activate-adobe-CC-2018-and-renew-trial
 ---
 ### 方法
 1. [官网](https://www.adobe.com/mena_en/creativecloud/desktop-app.html)下载Adobe Creative Cloud
