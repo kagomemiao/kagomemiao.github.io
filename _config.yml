@@ -126,11 +126,13 @@ live2d:
 #meiting
 aplayer:
   meting: true
+
 #hexo admin
-admin:
-  username: kagomemiao
-  password_hash: $2a$10$kwSuKVrHfbX.03liX28uUe1Nfs0nef0lMOTLKBA55hZ.Ee7YMtBse
-  secret: who's your daddy?
+# admin:
+#   username: kagomemiao
+#   password_hash: $2a$10$kwSuKVrHfbX.03liX28uUe1Nfs0nef0lMOTLKBA55hZ.Ee7YMtBse
+#   secret: who's your daddy?
+
 # image_stream:
 #   jquery: false
 #   jquery_lazyload: //cdn.bootcss.com/jquery.lazyload/1.9.1/jquery.lazyload.min.js
