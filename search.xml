@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[webkit本地调试从搭建环境到打包的一系列经验问题总结]]></title>
+    <url>%2F2018%2F12%2F03%2Fwebkit%E6%9C%AC%E5%9C%B0%E8%B0%83%E8%AF%95%E4%BB%8E%E6%90%AD%E5%BB%BA%E7%8E%AF%E5%A2%83%E5%88%B0%E6%89%93%E5%8C%85%E7%9A%84%E4%B8%80%E7%B3%BB%E5%88%97%E7%BB%8F%E9%AA%8C%E9%97%AE%E9%A2%98%E6%80%BB%E7%BB%93%2F</url>
+    <content type="text"><![CDATA[从git clone项目到本地仓库一个server端一个client端遇到的主要是server的本地环境调试和client的请求问题我用的vagrant搭建的centos虚拟机 这样可以在Windows下轻松一键ssh 调整配置也是一键reload就好参考网友说在centos系统下装宝塔管理系统 很方便 为了这种方便 让我焦头烂额了一晚上phpmyadmin打不开 由于瞎参考 一开始对vagrantfile的理解不够 没有加上端口转发 所以一直404 加上端口转发就好了 光宝塔的端口开启没有用的之后是路由问题 整个server只有一个入口文件可以访问 其他全部404 因为伪静态问题 也可以修改nginx配置文件解决 期间我读了半天代码 各种参数调试我也是醉了然后想办法把数据导入 学习到了没有设置主键的数据表只能通过sql修改好不容易server弄好client验证不通过 一开始是直接404后来auth fail 接着auth error心路历程太曲折了 要慢慢回忆最后终于进去了 数据要拷贝不然各种报错 后面还好都是小问题了数据库md5大小写是 auth半天不成功的原因 生成的apikey是大写decode64的调试要下载webdriver 有很多版本之后就是发现需要把client放进另外个虚拟机 这样避免影响本机操作所以又开了个win的虚拟机 还好有模板但是网络要重新设置 一个nat一个桥接还有虚拟机的hosts文件要加上 centos物理ip地址和绑定的调试域名之前主机只需要127.0.0.1 现在两台虚拟机加主机就需要用分配的虚拟ip地址了(192.168.x.x)win查询ipconfigcentos ifconfig大功告成 学到很多 好累啊先这样后期加]]></content>
+      <categories>
+        <category>server</category>
+      </categories>
+      <tags>
+        <tag>server</tag>
+        <tag>git</tag>
+        <tag>webkit</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用Let's Encrypt给lnmp搭建的虚拟主机配置https证书]]></title>
+    <url>%2F2018%2F12%2F03%2F%E4%BD%BF%E7%94%A8Let's-Encrypt%E7%BB%99lnmp%E6%90%AD%E5%BB%BA%E7%9A%84%E8%99%9A%E6%8B%9F%E4%B8%BB%E6%9C%BA%E9%85%8D%E7%BD%AEhttps%E8%AF%81%E4%B9%A6%2F</url>
+    <content type="text"><![CDATA[现在网上免费ssl证书很多 我选择的是Let’s Encrypt因为他可以自动更新证书认证 只需要使用官网的certbot在certbot可以选择具体的web服务程序和操作系统这里我是以debian操作系统下的nginx服务来进行的 具体步骤 安装certbot 12wget https://dl.eff.org/certbot-autochmod a+x certbot-auto 生成证书以及公私钥 1sudo ./certbot路径/certbot-auto certonly --webroot -w /网站根目录/ -d 域名.com 配置nginx 1234567891011121314server &#123; listen 80; server_name www.域名.com; rewrite ^(.*)$ https://$&#123;server_name&#125;$1 permanent; &#125;server &#123; listen 443; server_name www.你的域名.com; root /你的网站目录/; ssl on; ssl_certificate /etc/letsencrypt/live/你的域名.com/cert.pem; ssl_certificate_key /etc/letsencrypt/live/你的域名.com/privkey.pem; ....&#125; 添加crond自动任务 123crontab -e# 加上* * * */1 * /usr/bin/certbot renew 1&gt;&gt; /dev/null 2&gt;&amp;1 问题我在生成证书过程遇到了nginx403报错，原因是因为nginx配置文件指定路径被deny，这就需要在nginx的配置里加上123location ~ /.well-known &#123; allow all;&#125; 参考 certbot文档 DingBlog - 给你的网站加上小绿锁，配置Let’s Encrypt 免费SSL证书]]></content>
+      <categories>
+        <category>server</category>
+        <category>nginx</category>
+      </categories>
+      <tags>
+        <tag>https</tag>
+        <tag>nginx</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[宝塔面板如何禁止通过ip直接访问站点]]></title>
+    <url>%2F2018%2F07%2F18%2Fdisable-direct-access-to-website-using-ip-address%2F</url>
+    <content type="text"><![CDATA[目前网站使用的宝塔面板为了防止通过ip直接访问站点需要修改vhost的伪静态配置文件在宝塔界面相关站点的伪静态选项中加上以下条件 12345678location / &#123; ... if ($host ~ ^\d+\.\d+\.\d+\.\d+$) &#123; return 444; &#125;&#125; 参考宝塔论坛]]></content>
+      <categories>
+        <category>solution</category>
+        <category>server</category>
+      </categories>
+      <tags>
+        <tag>server</tag>
+        <tag>solution</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Painter大神的Adobe-2018全家桶安装方法以及无限试用]]></title>
+    <url>%2F2018%2F06%2F10%2FPainter%E5%A4%A7%E7%A5%9E%E7%9A%84Adobe-2018%E5%85%A8%E5%AE%B6%E6%A1%B6%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95%E4%BB%A5%E5%8F%8A%E6%97%A0%E9%99%90%E8%AF%95%E7%94%A8%2F</url>
+    <content type="text"><![CDATA[方法 官网下载Adobe Creative Cloud 申请个Email或者使用已有的 然后通过Creative Cloud来安装各种软件的试用 比如PS或者DW如果提醒试用到期的话 可以通过修改相关软件下/AMT/application文件(注意是无后缀的那一个)里面的SerialNumber来重新试用 随便改几个数字后保存 只要位数一致就ok *如果提示没有权限就右键该文件-属性 修改权限后再尝试 下载AMTemu工具 可以通过搜索’AMTemu v0.9.2’来下载 下载AdobeCreativeCloudCleanerTool.exe备用 断网后运行AMTemu工具 需要修改的参数有三个 第三个参数Version需要你右键想修改的软件的exe文件(不是快捷方式 所以是在软件目录里 比如Photoshop.exe)-属性-详细信息中的产品版本 例如19.1.4 其他两个参数请参照以下PhotoshopApplication Name: Adobe Photoshop CC 2018 Application LEID: V7{}Photoshop-19-Win-GM IllustratorApplication Name: Adobe Illustrator CC 2018 Application LEID: V7{}Illustrator-22-Win-GM XD (Experience Design)Application Name: Adobe XD CC 2018 Application LEID: V7{}XD-1-Win-GM After EffectsApplication Name: Adobe After Effects CC 2018 Application LEID: V7{}AfterEffects-15-Win-GM AnimateApplication Name: Adobe Animate CC 2018 Application LEID: V7{}Animate-18-Win-GM AuditionApplication Name: Adobe Audition CC 2018 Application LEID: V7{}Audition-11-Win-GM Character AnimatorApplication Name: Adobe Character Animator CC 2018 Application LEID: V7{}CharacterAnimator-1-Win-GM DreamweaverApplication Name: Adobe Dreamweaver CC 2018 Application LEID: V7{}Dreamweaver-18-Win-GM InDesignApplication Name: Adobe InDesign CC 2018 Application LEID: V7{}CharacterAnimator-13-Win-GM Premier ProApplication Name: Adobe Premier Pro CC 2018 Application LEID: V7{}PremierPro-12-Win-GM 修改完相对应的参数后点Install然后定位到该软件目录下选择amtlib.dll文件再点击打开(以防万一可以先备份一下原文件) 中途跳出来的框可以选否 等待AMTemu自己运行后就算成功了 删除Creative Cloud 如果删不掉就用步骤5中下载好的工具 我下载的是可选择性删除的版本 具体可参考这篇文章 参考 reddit/Piracy: Trick to Activate Adobe CC 2018 (including Adobe XD)]]></content>
+      <categories>
+        <category>hack</category>
+        <category>adobe</category>
+      </categories>
+      <tags>
+        <tag>hack</tag>
+        <tag>adobe</tag>
+        <tag>amtemu</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[live2d看板娘不显示的解决办法]]></title>
+    <url>%2F2018%2F04%2F06%2Flive2d%E7%9C%8B%E6%9D%BF%E5%A8%98%E4%B8%8D%E6%98%BE%E7%A4%BA%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95%2F</url>
+    <content type="text"><![CDATA[之前瞎逛网站看到了几个不错的博客安装了hexo-helper-live2d于是自己也尝试搞了一个shizuku的简单模型(默认的其中之一)在公司的电脑上配置好了能看见, 然而回到家里的mac上却看不见用chrome的console看了一下问题是Live2D widgets: Failed to create WebGL context.检查到是没有开启WebGL这个选项, 所以如果你使用了live2d但是却不显示 那么可能就是你的浏览器没有开启或者不支持WebGLchrome用户可以通过chrome://gpu来查看是否开启如果没有的话, 可以按照以下步骤开启: 打开chrome://settings,在’高级-系统’里面打开’使用硬件加速模式(如果可用)’ 打开chrome://flags 把’Override software rendering list’和’WebGL Draft Extensions’选为’Enabled’ 重启浏览器 之后重新加载使用了live2d的网站，等待几秒就能看见可爱的看板娘了 参考How to enable/Fix WebGL on Google Chrome (3 Easy steps!!!)]]></content>
+      <categories>
+        <category>solution</category>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+        <tag>live2d</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[mysql忘记密码]]></title>
+    <url>%2F2018%2F03%2F20%2Fforget-mysql-password%2F</url>
+    <content type="text"><![CDATA[前言阿里云的服务器到期了 由于只是个小小的博客站决定换个vps就够了准备迁移wordpress 然而发现自己忘记了数据库的账号密码 方法 找到my.conf编辑 vi /etc/my.conf在[mysqld]选项下添加skip-grant-table我一般是加在socket的后一行 重启mysql服务 我嫌麻烦就直接lnmp restart当然你必须是使用lnmp进行搭建才行 不然还是老老实实service mysqld restart 免密码登录mysql mysql -u root -p 选择数据库 use mysql 修改root密码 UPDATE user SET password=password(&#39;password&#39;) WHERE User=&#39;root&#39;; 删除my.conf中的skip-grant-table 重启服务 同2 参考 阿里云服务器忘记mysql的登录密码时候如何修改密码]]></content>
+      <categories>
+        <category>solution</category>
+        <category>server</category>
+      </categories>
+      <tags>
+        <tag>解决办法</tag>
+        <tag>server</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[如何使用git进行代码回滚]]></title>
+    <url>%2F2018%2F03%2F01%2Fgit-revert-tips%2F</url>
+    <content type="text"><![CDATA[本地代码库回滚1234# 回滚到指定的分支号git reset --hard &lt;commit-id&gt;# 回滚到最近的第N次提交git reset --hard HEAD~N 远程代码库回滚先将本地分支回滚-&gt;删除远程分支-&gt;重新推送本地分支1234567891011121314# 切换到指定分支git checkout &lt;branchName&gt;# 将远程分支拉取到本地git pull# 备份当前分支git branch branchName_backup# 本地回滚git reset --hard &lt;commit-id&gt;# 删除远程分支(推送空内容到远程分支)git push origin :&lt;branchName&gt;# 将本地回滚后的分支推送git push origin &lt;branchName&gt;# 查看是否成功后 可选择删除备份git branch -d &lt;branchName&gt;_backup 参考 记一次git代码merge和回滚操作]]></content>
+      <categories>
+        <category>solution</category>
+        <category>git</category>
+      </categories>
+      <tags>
+        <tag>solution</tag>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[github创建submodule以及关联同步远程fork源]]></title>
+    <url>%2F2018%2F02%2F28%2Fhow-to-configure-a-remote-and-sync-a-fork%2F</url>
+    <content type="text"><![CDATA[前言NexT更新到v6.0了，通过作者的Update from NexT v5.1.x说明，我准备采用这种办法，即便出现问题也可以切换回去之前的老版本并没有fork，当时也没想那么多现在觉得既然fork过来，那么以后就可以同步源了 fork源仓库这个很简单，可以直接通过网页右上角的fork到自己的repo，就略过了### 本地添加远程仓库 ~~ ~~本地先新建directory/文件夹，在该路径下git init 添加远程仓库git remote add &lt;origin&gt; &lt;git@github.com:remote/repo.git&gt; 这里origin是远程仓库的名字，后面是远程仓库的地址 再把远程仓库同步到本地git pull origin master 主仓库项目添加子模块(submodule) 最开始添加了远程仓库然后加子模块，发现git直接把整个目录clone下来了，并且文件是在以repo命名的文件夹下，所以创建子模块一定是要在上一级路径下，比如我的子模块是next的主题，那么就要在theme这个文件夹下创建由于一开始创建错误，需要删除掉该子模块:git submodule deinit -f &lt;mod_name&gt;mod_name是该子模块的目录名由于我还没有添加模块信息，所以不需要进行git rm -cached &lt;mod_name&gt;删除.gitmodule中的记录 添加子模块后来发现由于我的理解失误，其实子模块应该是创建在主项目路径下的 由于一开始理解错误，在theme这个文件夹下创建了submodule导致了子模块创建在了另一个主题下，然后我只好进行代码回滚. git submodule add &lt;git@github.com...&gt; local/directory 问题11'repo' already exists in the index 两种解决办法: 换个没起过的名字 unstage之前添加的submodule: git rm -r &lt;repo-name&gt;，不管出现什么提示，之后再进行git submodule add就没有问题了提交子模块到远程仓库: git commit -m &quot;added &lt;name&gt; submodule&quot; 问题21A git directory is found locally with remote(s) 删除.gitmodules中相关的内容: 123[submodule "path_to_submodule"] path = path_to_submodule url = https://github.com/path_to_submodule 删除.git/config中相关的内容: 12[submodule "path_to_submodule"] url = https://github.com/path_to_submodule 删除.git/modules/path_to_submodule文件夹 之后再进行git submodule add... 添加上游仓库 首先进入到该submodule目录查看远程状态: 1234cd your/submodulegit remote -v# origin https://github.com/YOUR_USERNAME/YOUR_FORK.git (fetch)# origin https://github.com/YOUR_USERNAME/YOUR_FORK.git (push) 添加fork源仓库: 1git remote add upstream https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY.git 查看是否配置成功: 12345git remote -v# origin https://github.com/YOUR_USERNAME/YOUR_FORK.git (fetch)# origin https://github.com/YOUR_USERNAME/YOUR_FORK.git (push)# upstream https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY.git (fetch)# upstream https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY.git (push) 同步fork源从fork源fetch分支内容: git fetch upstream会被存到一个本地的分支upstream/master中: 12From https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY * [new branch] master -&gt; upstream/master 切换到本地分支: git checkout master把源分支合并到本地master上: git merge upstream/master 这样本地修改的内容也不会被覆盖本地修改内容后，就可以进行add，commit和push了之后再push到远程仓库中: git push origin master 参考: Add a submodule which can’t be removed from the index git中本地与远程库的关联与取消 [Git] 如何优雅的删除子模块 【Git】子模块: 一个仓库包含另一个仓库 同步一个 fork Git submodule add: “a git directory is found locally” issue]]></content>
+      <categories>
+        <category>solution</category>
+        <category>git</category>
+      </categories>
+      <tags>
+        <tag>github</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[vagrant+vb+centos下本地lnmp的自定义域名设置]]></title>
+    <url>%2F2018%2F02%2F28%2Fadd-custom-domains-to-localhosts-centos-lnmp%2F</url>
+    <content type="text"><![CDATA[还是按操作创建虚拟主机lnmp vhost add填写自定义域名一路操作下来后 centos虚拟机内vi /etc/hosts添加127.0.0.1 自定义域名可以创建个简单的index页面然后通过curl 自定义域名看能否查看内容 windows内C:\Windows\System32\drivers\etc修改hosts，同centos一样添加]]></content>
+      <categories>
+        <category>solution</category>
+        <category>centos</category>
+      </categories>
+      <tags>
+        <tag>centos</tag>
+        <tag>解决办法</tag>
+        <tag>vagrant</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[搭建Shadowsocks科学上网服务器的记录]]></title>
+    <url>%2F2018%2F01%2F30%2Fhow-to-build-a-ss-server%2F</url>
+    <content type="text"><![CDATA[同事推荐的年末促销，碰上了$5.99+$2一年$2.99和$3.99的都被抢完了 真的是手快 配置如下12345678RAM: 128MB DDR3CPU: 1 CoreHDD: 8GB RAID-10 StorageMonthly Bandwidth: 500GB w/ 100Mbps UplinkIPv4 Space: 1Datacenter Location: Los Angeles, CaliforniaAdd 1TB of monthly bandwidth …过程略过最后实际购买的搬瓦工vps+宝塔面板后台有自带ss一键安装*省事最重要]]></content>
+      <categories>
+        <category>solution</category>
+        <category>server</category>
+      </categories>
+      <tags>
+        <tag>科学上网</tag>
+        <tag>shadowsocks</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[python学习笔记]]></title>
+    <url>%2F2017%2F07%2F03%2Fpython-learning-notes%2F</url>
+    <content type="text"><![CDATA[Python学习中的一些问题记录及解决方法Python: URLError: &lt;urlopen error [Errno 10060]如果是从国内网站访问一些不翻墙无法访问的网站，需要在urlopen里面配置代理： 1234def function(name): #because i am here in china so i need proxy to access some site p = &#123;"http":"http://127.0.0.1:1080"&#125; #这里我是用的shadowsocks，所以端口配置和ss的一致 c = urllib.urlopen("http://www.google.com", proxies = p)]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>笔记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[git忽略本地文件的方法]]></title>
+    <url>%2F2017%2F06%2F20%2Fgit-ignore-certain-files%2F</url>
+    <content type="text"><![CDATA[前言这次做项目使用的nodejs和express框架，尝试用git push来本地上传项目到仓库，再从服务器把项目源码git pull下来 但是由于本地和服务器使用了不同的数据库，所以数据库的配置文件是有差别的为了每次不把本地测试的数据库配置push到仓库，以及从仓库pull到服务器的时候不覆盖服务器的配置文件，这里记录一些git的操作 方法1. .gitignore文件此文件中保存的文件 都会被忽略以及.gitignore文件本身会被提交到版本库中，属于global的也就是说 需要所有端都忽略的文件就可以保存在这里面此文件的优点是 根目录与子目录可以有不同的.gitignore文件，由于git不会加入空目录，这个方法适用于想保留空目录但是忽略目录内的文件，在想要保留的目录下创建.gitignore并加入以下内容：123# 这里*代表该目录内所有文件*!.gitignore * 需要注意的是，如果想要忽略的文件已经被纳入版本库了，那么修改.gitignore是无效的 2. .git/info/exclude文件如果只是想本地忽略，那么可以把想要忽略的文件添加到.git/info/exclude文件中被添加的文件只会在本地生效，且.git/info/exclude文件不会提交到版本库中 但是在部署过程中我发现，一旦被忽略的文件有改动，就会出现很多问题 比如： 1error: Untracked working tree file 'app.js' would be overwritten by merge. Aborting 123error: Your local changes to the following files would be overwritten by merge: package.jsonPlease commit your changes or stash them before you merge. git reset --hard git pull git submodule update --recursive --remote 1Submodule path 'themes/next': checked out 'someBranchId' cd blog git pull origin master 1fatal: refusing to merge unrelated histories git pull origin master --allow-unrelated-histories 参考： http://www.itopers.com:8080/blog/posts/tools/git/git_config.html http://wyqbailey.github.io/2015/04/02/git%20update-index.html https://ruby-china.org/topics/17948 https://stackoverflow.com/questions/8598937/git-update-index-assume-unchanged-returns-error]]></content>
+      <categories>
+        <category>solution</category>
+        <category>git</category>
+      </categories>
+      <tags>
+        <tag>解决办法</tag>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[关于个人和网站的一些记录]]></title>
+    <url>%2F2017%2F05%2F24%2Fpersonal-logs%2F</url>
+    <content type="text"><![CDATA[– 2018 –4/2 添加动态live2d模型 添加个人豆瓣列表hexo-douban live2d模型列表 3/2 元宵节 添加网站运行时间到侧边栏 3/1 更新NexT主题v6.0.x – 2017 –6/20 next主题自定义无序列表 issue#451 - toc_number: true/false 6/8 [adswiki.net] - contact 使用node.js，express.js框架和jade模板搭建网站 bootstrap 真不错 6/1 儿童节 学习jade模板引擎语法 5/25 添加自定义站内搜索 学习了解模板引擎swig语法 5/24 给NexT主题的page添加toc， 包括修复无法点击和行距太近的问题 - Fixes and enhancements. [11] 把NexT主题的sidebar居左 添加404.html页面 - 参考 5/19 git push成功但是github文件不会同步更新导致travis ci持续集成构建不是更新后的博客内容* 已自行修复，可能是抽风作妖了，这中间我发现我的submodule的远程repo路径写错了于是重新修改了一下再push就成功了 学习 git commit规范 进一步了解git - 可视化git沙盒教程 5/18 自定义页面无title，设置了页面又会有title - [Issue] 5/17 添加动态背景 canvas line 和动漫header 优化hexo用以支持 脚注 和 流程图]]></content>
+      <tags>
+        <tag>logs</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[让NexT主题的Muse模板侧边栏居左]]></title>
+    <url>%2F2017%2F05%2F24%2Fhexo-theme-next-set-sidebar-to-left%2F</url>
+    <content type="text"><![CDATA[前言目前hexo的NexT主题只有Pisces支持定义侧边栏位置但是我目前使用的是Muse主题 并且想让其在左侧 方法步骤其实很简单你需要： 修改motion.js首先调整侧边栏收放的动画效果 把原本从右至左的压缩页面变成从左至右这个文件在next主题下source\js\src使用Ctrl+F查找paddingRight 把其修改为paddingLeft就可以了 调整自定义css调整完动画之后就很简单了 把sidebar相关的部件通过修改css的方法移动到左侧直接在source\css\_custom下为custom.styl添加内容即可123456.sidebar-toggle&#123; left:30px;&#125;.sidebar&#123; left:0;&#125; 这里我还是把back-to-top这个按钮留在了右侧如果你偏向一并放在左侧 添加以下css 123.back-to-top&#123; left:30px;&#125; 修改箭头动画方向追求完美的话，可以把箭头指向从左改成右参照以下内容修改motion.js文件 var sidebarToggleLine1st = new SidebarToggleLine({ el: '.sidebar-toggle-line-first', status: { arrow: {width: '60%', rotateZ: '45deg', top: '2px', left: '50%'}, close: {width: '100%', rotateZ: '-45deg', top: '5px'} } }); var sidebarToggleLine2nd = new SidebarToggleLine({ el: '.sidebar-toggle-line-middle', status: { arrow: {width: '90%'}, close: {opacity: 0} } }); var sidebarToggleLine3rd = new SidebarToggleLine({ el: '.sidebar-toggle-line-last', status: { arrow: {width: '60%', rotateZ: '-45deg', top: '-2px', left: '50%'}, close: {width: '100%', rotateZ: '45deg', top: '-5px'} } }); — 2018年4月4日更新 — 容器选择由于想美化侧边栏，把它弄成半透明的，然后发现不管怎么调整都还是不透明后来发现问题出在之前修改的motion.js上面由于选择器是body，所以当展开左侧侧边栏时，把body同时向右压缩以适应页面这样就导致了侧边栏透明度不管怎么调整都还是不透明，因为下面是body的背景色而并不是侧边栏不能调整透明所以我就把motion.js中选择的两个body改成了.containerNexT.utils.isDesktop() &amp;&amp; $(&#39;.container&#39;).velocity(&#39;stop&#39;)]]></content>
+      <categories>
+        <category>solution</category>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+        <tag>theme-next</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[这是一篇心态爆炸的travis集成自动构建gitpage的解决方案]]></title>
+    <url>%2F2017%2F05%2F16%2Ftravis-ci-github-sync%2F</url>
+    <content type="text"><![CDATA[关于由于在office和家里都会有更新文章的时候 重新部署的时候又略嫌麻烦且难以同步更新两处文件 所以参考网上的一些方法做了一个持续集成1的自动部署 以便实现多人/多处更新后使用git push到repo后travis2自动化构建hexo博客 工作原理流程图 具体方法具体的travis ci自动同步方法网上一搜一大片，比如： 使用 Travis CI 自动部署 Hexo 手把手教你使用Travis CI自动部署你的Hexo博客到Github上 一些问题在follow教程中遇到了很多问题，导致最后就是心态爆炸 但最终还是成功部署 我这里只写我遇到的一些坑 1. git分支push问题这个问题是由于我偷懒，直接通过github网页新建source分支产生的 先讲一下git远程分支的一些命令：git branch 查看分支，*绿色为当前分支 git remote -v 查看远程主机和仓库地址 git remote add &lt;shortname&gt; &lt;url&gt; 添加远程仓库 如果有提示错误，类似已有远程仓库，git remote rm之后重新添加就好了 *基本理解就是把你当前文件夹和远程仓库对应分支进行关联以便push同步 更多详细的操作可参考Git远程操作详解 通过本地git push origin source后会提示如下： 123hint: Updates were rejected because the tip of your current branch is behindhint: its remote counterpart. Merge the remote changes (e.g. &apos;git pull&apos;)hint: before pushing again. 这是由于通过webpage新建分支是直接clone master分支的内容，所以source分支内容不为空 由于source内clone的内容对我并不重要，所以我使用了最简单暴力的git push -f：直接强行推送覆盖远程仓库 其他方法方法1：push前先将远程repository修改pull下来12git pull origin mastergit push -u origin master 方法2：若不想merge远程和本地修改，可以先创建新的分支git branch [name]然后再pushgit push -u origin [name] 2. git push theme/next无内容猜想原因是由于主题文件通过git clone进行安装的，所以push上去会没有内容 于是 我fork了一份next的主题（并不好使） 新建了一个repo，把自己本地的next主题内容push了上去（完美） 这里你要用到上面提到的git关联仓库的方法进行push 再在博客根目录新建.gitmodules，写入以下内容 123[submodule &quot;themes/next&quot;] path = themes/next url = git://github.com/yourname/your_theme_repo.git #这里可能会引发问题4 *这里用submodule的方法把source分支下themes/next和新建的repo进行关联 参考TravisCI自动部署Hexo博客到Github 3. travis build fatal error此问题基本是因为问题2中主题文件缺失，导致一些自定义标签未定义产生的 修正问题2后就ok了 4. travis log 提示 git permission denied如果你正确配置了travis的环境变量后还是出现了permission denied 但是通过hexo d能正常推送 这个问题可能会出现，是由于在配置.gitmodules文件时，url使用git而不是https，反之亦然 123url = git://github.com/yourname/your_theme_repo.git修改为url = https://github.com/yourname/your_theme_repo.git 使用方法在本地编辑文章后 123git add . #提交文件到缓存区git commit -m &quot;msg&quot; #添加本次提交说明git push &lt;shortname&gt; &lt;branch&gt; #提交 基本上就这些，另附我的.travis.yml配置： 1234567891011121314151617181920212223242526272829303132333435363738394041424344language: node_jsnode_js: stable# cache this directorycache: directories: - node_modules #缓存本地package# S: Build Lifecyclebefore_install:- export TZ=&apos;Asia/Shanghai&apos; #设定时区- npm install -g hexo- npm install -g hexo-cliinstall: - npm install before_script: - npm install -g gulp #如果使用gulp优化才需要这一行script: - git submodule init #用于更新主题,更新源为自己的主题项目，否则会clone最新NexT主题，而官方主题配置文件没有设置 - git submodule update - hexo clean &amp;&amp; hexo g - gulp default #使用 gulp 对流程进行优化，不使用可以删除这一行after_script: - cd ./public - git init - git config user.name &quot;yourname&quot; - git config user.email &quot;youremail&quot; - git add . - git commit -m &quot;Update docs&quot; - git push --force --quiet &quot;https://$&#123;GH_TOKEN&#125;@$&#123;GH_REF&#125;&quot; master:master# E: Build LifeCyclebranches: only: - branch #需要监听的分支名，这里是博客的源文件分支env: global: - GH_REF: github.com/yourname/yourname.github.io.git #设置GH_REF，注意更改yourname io1=>inputoutput: New Code op1=>operation: Source Control op2=>operation: Continuous Integration io2=>inputoutput: Production io1->op1->op2->io2{"scale":1,"line-width":2,"line-length":50,"text-margin":10,"font-size":12} var code = document.getElementById("flowchart-0-code").value; var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-0-options").value)); var diagram = flowchart.parse(code); diagram.drawSVG("flowchart-0", options);1.持续集成：Continuous Integration，简称CI: 在一个项目中，任何人对代码库的任何改动，都会触发CI服务器自动对项目进行构建，自动运行测试，甚至自动部署到测试环境。这样做的好处就是，随时发现问题，随时修复。因为修复问题的成本随着时间的推移而增长，越早发现，修复成本越低。 ↩2.Travis CI是在线托管的开源持续集成构建项目，不需要搭建服务器，它采用yaml格式且对开源项目免费。 ↩]]></content>
+      <categories>
+        <category>solution</category>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>解决办法</tag>
+        <tag>hexo</tag>
+        <tag>心态爆炸</tag>
+        <tag>travis ci</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[解决wordpress安装升级插件需要ftp信息的方法]]></title>
+    <url>%2F2017%2F05%2F16%2Fwordpress-plugin-update-ftp-permission%2F</url>
+    <content type="text"><![CDATA[wordpress博客在安装插件时提示需要输入FTP信息的解决办法：步骤： 修改wordpress配置文件wp-config.php 在配置文件末尾添加如下代码： 1234if(is_admin()) &#123; add_filter('filesystem_method', create_function('$a','return "direct";' )); define('FS_CHMOD_DIR', 0751);&#125; 加上以上代码，就可以了]]></content>
+      <categories>
+        <category>solution</category>
+        <category>wordpress</category>
+      </categories>
+      <tags>
+        <tag>解决办法</tag>
+        <tag>wordpress</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[落日 - 東京事変]]></title>
+    <url>%2F2017%2F05%2F04%2Fsunset%2F</url>
+    <content type="text"><![CDATA[「何が悲しい?」と寻かれたって何も哀しんでなど居ないさ丁度太阳が去っただけだろう 就算有人问[你为何伤心]其实我根本也没难过什麼可能是刚好遇到太阳离去而已]]></content>
+      <categories>
+        <category>music</category>
+      </categories>
+      <tags>
+        <tag>music</tag>
+        <tag>椎名林檎</tag>
+        <tag>東京事変</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[hexo首页只显示特定分类/标签下的文章]]></title>
+    <url>%2F2017%2F05%2F02%2Fhexo-index-category-filter%2F</url>
+    <content type="text"><![CDATA[前言由于我为[music]分类单独设置了页面，所以不希望这个分页出现在首页。 在网上查找了很多办法:hexo-generator-index2比如使用插件hexo-generator-index2来替换hexo-generator-index，使其增加过滤功能。 但实际使用中，hexo-generator-index2的include/exclude开启后无法正常生成index.html 推断是由于hexo版本更新到3.2后推出了同样的include/exclude选项导致冲突。 Hexo 3.2更新后不允许配置文件中存在重复的选项设置。 因此，如果 站点配置文件 中存在同名的配置，则需要将两者配置在一起。 但可能由于这里两者功能不同，所以无法配置在一起。 需等待作者回复 5/4 作者回复他的博客并没有出现上述问题 那这就是最佳的方法了，具体使用方式如下： 安装12$ npm install hexo-generator-index2 --save$ npm uninstall hexo-generator-index --save *hexo-generator-index2包含了原始插件所有内容，并添加了过滤功能。 配置选项1234567index_generator: per_page: 10 # 每页显示文章数，设置0为不分页 order_by: -date # 文章排序，默认为按时间先后排序 include: - category Web # 包含分类为&apos;Web&apos;的文章，可自行修改 exclude: - tag Hexo # 过滤标签为&apos;Hexo&apos;的文章，可自行修改 选项说明per_page和order_by都是原始官方插件的选项，可以不用修改 include/exclude可选属性有： category: 文章分类 tag: 文章标签 path: 文章路径 使用过滤功能需在属性后添加具体过滤的值，格式可参照选项配置。 选项配置需添加在站点配置文件中。 修改主题layout文件这个方法是我在next主题的github issues - 是否可以在主页只显示特定category下的文章下找到的 由@chenkaiwei提出修改next主题layout-index.swig的方法以实现标签过滤 123456789&lt;section id=&quot;posts&quot; class=&quot;posts-expand&quot;&gt; &#123;% for post in page.posts %&#125; &#123;% for tag in post.tags %&#125; &#123;% if tag.name==&apos;&lt;tagname&gt;&apos; %&#125; &#123;&#123; post_template.render(post, true) &#125;&#125; &#123;% endif %&#125; &#123;% endfor %&#125; &#123;% endfor %&#125;&lt;/section&gt; 经测试同样可以用于首页分类的过滤，只需要把tags替换为categories 123456789&lt;section id=&quot;posts&quot; class=&quot;posts-expand&quot;&gt; &#123;% for post in page.posts %&#125; &#123;% for categories in post.categories %&#125; &#123;% if categories.name !== &apos;music&apos; %&#125; &#123;&#123; post_template.render(post, true) &#125;&#125; &#123;% endif %&#125; &#123;% endfor %&#125; &#123;% endfor %&#125;&lt;/section&gt;]]></content>
+      <categories>
+        <category>solution</category>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>解决办法</tag>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[It ain't me - Selena Gomes/Kygo]]></title>
+    <url>%2F2017%2F05%2F02%2Fit-aint-me%2F</url>
+    <content type="text"><![CDATA[傻脸娜这首歌很不错整个mv营造了一个迷幻的梦境 讲了一个生离死别的故事 不知为何 听了这首歌 就有种沉溺在梦境中不想醒来的感觉]]></content>
+      <categories>
+        <category>music</category>
+      </categories>
+      <tags>
+        <tag>music</tag>
+        <tag>selena gomez</tag>
+        <tag>remix</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[wordpress无法切换主题/页面模板[page templates]不显示的解决方法]]></title>
+    <url>%2F2017%2F04%2F25%2Fwordpress-page-templates-dont-show%2F</url>
+    <content type="text"><![CDATA[在编辑wp站点的时候，我发现站点页面编辑器的模板选项不见了 而且无法通过切换主题来恢复: 主题选项只显示当前主题 可使用以下方法: 12345678910//在网站服务器的命令行输入,如果没有root权限请加上'sudo'vi /usr/local/php/etc/php.ini //查找文件中的'scandir'字段/scandir //删除'disable_funcions='后的'scandir,' //重启网站服务器,我使用的lnmplnmp restart]]></content>
+      <categories>
+        <category>solution</category>
+        <category>wordpress</category>
+      </categories>
+      <tags>
+        <tag>解决办法</tag>
+        <tag>wordpress</tag>
+        <tag>wordpress page templates</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[wordpress无法上传图片的解决办法]]></title>
+    <url>%2F2017%2F04%2F25%2Fwordpress-cannot-upload-img%2F</url>
+    <content type="text"><![CDATA[在本地是用apache进行调试的，然后搬到nginx搭建的服务器上，就会出现wordpress无法上传图片、安装插件和更新的问题。 在搜索了很多类似于修改权限777的内容后，学习到了一些内容。因为修改权限对于服务器来说并非是安全的，所以不建议使用这个方法，而且此方法对于我遇到的问题是无效的。 以下是参阅了烂泥的一篇文章后总结的内容 几个命令查看nginx、php-fpm以及mysql运行在哪个用户下：123456//nginx显示用户情况ps aux |grep nginx//php-fpm显示用户情况ps aux |grep php-fpm//mysql显示用户情况ps aux |grep mysql *导致网站不能上传图片是因为nginx和php-fpm用户不统一 在同一用户组之后再修改虚拟主机的根目录用户及用户组chown &lt;username&gt;:&lt;usergroup&gt; -R &lt;directory&gt; 之后重启lnmp服务就可以在站点进行上传了lnmp restart *通过lnmp添加的虚拟主机配置文件会显示：operation not permitted，但是并不会影响]]></content>
+      <categories>
+        <category>solution</category>
+        <category>wordpress</category>
+      </categories>
+      <tags>
+        <tag>解决办法</tag>
+        <tag>wordpress</tag>
+      </tags>
+  </entry>
+</search>

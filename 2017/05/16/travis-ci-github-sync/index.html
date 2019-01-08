@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="-usglpYEnx0tLQ1vNoINPByqOZr9ycpDCTV6jnRogKs" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.0.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=6.0.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=6.0.4">
+
+
+  <link rel="mask-icon" href="/favicon.ico?v=6.0.4" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.0.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":true,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+  
+  <meta name="keywords" content="解决办法,hexo,心态爆炸,travis ci," />
+
+
+<meta name="description" content="关于由于在office和家里都会有更新文章的时候  重新部署的时候又略嫌麻烦且难以同步更新两处文件  所以参考网上的一些方法做了一个持续集成1的自动部署  以便实现多人/多处更新后使用git push到repo后travis2自动化构建hexo博客 工作原理流程图  具体方法具体的travis ci自动同步方法网上一搜一大片，比如：  使用 Travis CI 自动部署 Hexo 手把手教你使用T">
+<meta name="keywords" content="解决办法,hexo,心态爆炸,travis ci">
+<meta property="og:type" content="article">
+<meta property="og:title" content="这是一篇心态爆炸的travis集成自动构建gitpage的解决方案">
+<meta property="og:url" content="http://yoursite.com/2017/05/16/travis-ci-github-sync/index.html">
+<meta property="og:site_name" content="Katerina Wang">
+<meta property="og:description" content="关于由于在office和家里都会有更新文章的时候  重新部署的时候又略嫌麻烦且难以同步更新两处文件  所以参考网上的一些方法做了一个持续集成1的自动部署  以便实现多人/多处更新后使用git push到repo后travis2自动化构建hexo博客 工作原理流程图  具体方法具体的travis ci自动同步方法网上一搜一大片，比如：  使用 Travis CI 自动部署 Hexo 手把手教你使用T">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-01-08T04:35:59.709Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="这是一篇心态爆炸的travis集成自动构建gitpage的解决方案">
+<meta name="twitter:description" content="关于由于在office和家里都会有更新文章的时候  重新部署的时候又略嫌麻烦且难以同步更新两处文件  所以参考网上的一些方法做了一个持续集成1的自动部署  以便实现多人/多处更新后使用git push到repo后travis2自动化构建hexo博客 工作原理流程图  具体方法具体的travis ci自动同步方法网上一搜一大片，比如：  使用 Travis CI 自动部署 Hexo 手把手教你使用T">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/05/16/travis-ci-github-sync/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+  <title>这是一篇心态爆炸的travis集成自动构建gitpage的解决方案 | Katerina Wang</title>
+  
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-89378418-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-89378418-3');
+</script>
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  
+  
+    
+  
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Katerina Wang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">> My ghost, where'd you go?</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-movie">
+          <a href="/movies" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-tv"></i> <br />电影</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-book"></i> <br />书</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-games">
+          <a href="/games" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-steam"></i> <br />游戏</a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            <i class="menu-item-icon fa fa-fw fa-user"></i> <br />关于</a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+  
+
+
+ 
+      </div>
+      <canvas class="canvas-line"></canvas>
+    </header>
+
+    
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/16/travis-ci-github-sync/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Katerina Wang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/teresa.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Katerina Wang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">这是一篇心态爆炸的travis集成自动构建gitpage的解决方案</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-16T17:55:13+08:00">2017-05-16</time>
+            
+
+            
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/solution/" itemprop="url" rel="index"><span itemprop="name">solution</span></a></span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/solution/hexo/" itemprop="url" rel="index"><span itemprop="name">hexo</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/05/16/travis-ci-github-sync/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2017/05/16/travis-ci-github-sync/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/hint.css/2.4.1/hint.min.css"><h2 id="关于"><a href="#关于" class="headerlink" title="关于"></a>关于</h2><p>由于在office和家里都会有更新文章的时候 
+重新部署的时候又略嫌麻烦且难以同步更新两处文件 
+所以参考网上的一些方法做了一个持续集成<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>的自动部署 
+以便实现多人/多处更新后使用<code>git push</code>到repo后travis<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>自动化构建hexo博客</p>
+<h3 id="工作原理流程图"><a href="#工作原理流程图" class="headerlink" title="工作原理流程图"></a>工作原理流程图</h3><div id="flowchart-0" class="flow-chart"></div>
+
+<h3 id="具体方法"><a href="#具体方法" class="headerlink" title="具体方法"></a>具体方法</h3><p>具体的travis ci自动同步方法网上一搜一大片，比如： </p>
+<p><a href="http://www.jianshu.com/p/5e74046e7a0f" target="_blank" rel="noopener">使用 Travis CI 自动部署 Hexo</a>
+<a href="http://www.jianshu.com/p/e22c13d85659" target="_blank" rel="noopener">手把手教你使用Travis CI自动部署你的Hexo博客到Github上</a></p>
+<h2 id="一些问题"><a href="#一些问题" class="headerlink" title="一些问题"></a>一些问题</h2><p>在follow教程中遇到了很多问题，导致最后就是心态爆炸 
+但最终还是成功部署
+我这里只写我遇到的一些坑 </p>
+<h3 id="1-git分支push问题"><a href="#1-git分支push问题" class="headerlink" title="1. git分支push问题"></a>1. git分支push问题</h3><p>这个问题是由于我偷懒，直接通过github网页新建<code>source</code>分支产生的 </p>
+<h4 id="先讲一下git远程分支的一些命令："><a href="#先讲一下git远程分支的一些命令：" class="headerlink" title="先讲一下git远程分支的一些命令："></a>先讲一下git远程分支的一些命令：</h4><p><code>git branch</code> 查看分支，<font color="green"><strong>*绿色</strong></font>为当前分支 
+<code>git remote -v</code> 查看远程主机和仓库地址 
+<code>git remote add &lt;shortname&gt; &lt;url&gt;</code> 添加远程仓库 
+如果有提示错误，类似已有远程仓库，<code>git remote rm</code>之后重新添加就好了 </p>
+<p>*<em>基本理解就是把你当前文件夹和远程仓库对应分支进行关联以便push同步</em></p>
+<p>更多详细的操作可参考<a href="http://www.ruanyifeng.com/blog/2014/06/git_remote.html" target="_blank" rel="noopener">Git远程操作详解</a> </p>
+<p>通过本地<code>git push origin source</code>后会提示如下：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hint: Updates were rejected because the tip of your current branch is behind</span><br><span class="line">hint: its remote counterpart. Merge the remote changes (e.g. &apos;git pull&apos;)</span><br><span class="line">hint: before pushing again.</span><br></pre></td></tr></table></figure></p>
+<p>这是由于通过webpage新建分支是直接clone master分支的内容，所以source分支内容不为空 
+由于source内clone的内容对我并不重要，所以我使用了最简单暴力的<code>git push -f</code>：直接强行推送覆盖远程仓库</p>
+<h4 id="其他方法"><a href="#其他方法" class="headerlink" title="其他方法"></a>其他方法</h4><h5 id="方法1：push前先将远程repository修改pull下来"><a href="#方法1：push前先将远程repository修改pull下来" class="headerlink" title="方法1：push前先将远程repository修改pull下来"></a>方法1：push前先将远程repository修改pull下来</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git pull origin master</span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
+<h5 id="方法2：若不想merge远程和本地修改，可以先创建新的分支"><a href="#方法2：若不想merge远程和本地修改，可以先创建新的分支" class="headerlink" title="方法2：若不想merge远程和本地修改，可以先创建新的分支"></a>方法2：若不想merge远程和本地修改，可以先创建新的分支</h5><p><code>git branch [name]</code>然后再push<code>git push -u origin [name]</code></p>
+<h3 id="2-git-push-theme-next无内容"><a href="#2-git-push-theme-next无内容" class="headerlink" title="2. git push theme/next无内容"></a>2. git push <code>theme/next</code>无内容</h3><p>猜想原因是由于主题文件通过<code>git clone</code>进行安装的，所以push上去会没有内容 
+于是 </p>
+<ul>
+<li>我fork了一份next的主题（并不好使）</li>
+<li>新建了一个repo，把自己本地的next主题内容push了上去（完美）</li>
+</ul>
+<p>这里你要用到上面提到的git关联仓库的方法进行push 
+再在博客根目录新建<code>.gitmodules</code>，写入以下内容 
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[submodule &quot;themes/next&quot;]</span><br><span class="line">    path = themes/next</span><br><span class="line">    url = git://github.com/yourname/your_theme_repo.git #这里可能会引发问题4</span><br></pre></td></tr></table></figure></p>
+<p>*<em>这里用submodule的方法把source分支下themes/next和新建的repo进行关联</em> </p>
+<p>参考<a href="https://xin053.github.io/2016/06/05/Travis%20CI%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2Hexo%E5%8D%9A%E5%AE%A2%E5%88%B0Github/" target="_blank" rel="noopener">TravisCI自动部署Hexo博客到Github</a> </p>
+<h3 id="3-travis-build-fatal-error"><a href="#3-travis-build-fatal-error" class="headerlink" title="3. travis build fatal error"></a>3. travis build fatal error</h3><p>此问题基本是因为问题2中主题文件缺失，导致一些自定义标签未定义产生的 
+修正问题2后就ok了 </p>
+<h3 id="4-travis-log-提示-git-permission-denied"><a href="#4-travis-log-提示-git-permission-denied" class="headerlink" title="4. travis log 提示 git permission denied"></a>4. travis log 提示 <code>git permission denied</code></h3><p>如果你正确配置了travis的环境变量后还是出现了permission denied 
+但是通过hexo d能正常推送 
+这个问题<strong>可能</strong>会出现，是由于在配置<code>.gitmodules</code>文件时，url使用git而不是https，反之亦然
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">url = git://github.com/yourname/your_theme_repo.git</span><br><span class="line">修改为</span><br><span class="line">url = https://github.com/yourname/your_theme_repo.git</span><br></pre></td></tr></table></figure></p>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p>在本地编辑文章后
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git add . #提交文件到缓存区</span><br><span class="line">git commit -m &quot;msg&quot; #添加本次提交说明</span><br><span class="line">git push &lt;shortname&gt; &lt;branch&gt; #提交</span><br></pre></td></tr></table></figure></p>
+<p>基本上就这些，另附我的.travis.yml配置：
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">language: node_js</span><br><span class="line">node_js: stable</span><br><span class="line"></span><br><span class="line"># cache this directory</span><br><span class="line">cache:</span><br><span class="line">  directories:</span><br><span class="line">    - node_modules #缓存本地package</span><br><span class="line"></span><br><span class="line"># S: Build Lifecycle</span><br><span class="line">before_install:</span><br><span class="line">- export TZ=&apos;Asia/Shanghai&apos; #设定时区</span><br><span class="line">- npm install -g hexo</span><br><span class="line">- npm install -g hexo-cli</span><br><span class="line"></span><br><span class="line">install:</span><br><span class="line">  - npm install</span><br><span class="line">  </span><br><span class="line">before_script:</span><br><span class="line">  - npm install -g gulp #如果使用gulp优化才需要这一行</span><br><span class="line"></span><br><span class="line">script:</span><br><span class="line">  - git submodule init #用于更新主题,更新源为自己的主题项目，否则会clone最新NexT主题，而官方主题配置文件没有设置</span><br><span class="line">  - git submodule update</span><br><span class="line">  - hexo clean &amp;&amp; hexo g</span><br><span class="line">  - gulp default #使用 gulp 对流程进行优化，不使用可以删除这一行</span><br><span class="line"></span><br><span class="line">after_script:</span><br><span class="line">  - cd ./public</span><br><span class="line">  - git init</span><br><span class="line">  - git config user.name &quot;yourname&quot;</span><br><span class="line">  - git config user.email &quot;youremail&quot;</span><br><span class="line">  - git add .</span><br><span class="line">  - git commit -m &quot;Update docs&quot;</span><br><span class="line">  - git push --force --quiet &quot;https://$&#123;GH_TOKEN&#125;@$&#123;GH_REF&#125;&quot; master:master</span><br><span class="line"></span><br><span class="line"># E: Build LifeCycle</span><br><span class="line"></span><br><span class="line">branches:</span><br><span class="line">  only:</span><br><span class="line">    - branch #需要监听的分支名，这里是博客的源文件分支</span><br><span class="line">env:</span><br><span class="line"> global:</span><br><span class="line">   - GH_REF: github.com/yourname/yourname.github.io.git</span><br><span class="line">   #设置GH_REF，注意更改yourname</span><br></pre></td></tr></table></figure></p>
+<p><script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script><textarea id="flowchart-0-code" style="display: none">io1=>inputoutput: New Code
+op1=>operation: Source Control
+op2=>operation: Continuous Integration
+io2=>inputoutput: Production
+
+io1->op1->op2->io2</textarea><textarea id="flowchart-0-options" style="display: none">{"scale":1,"line-width":2,"line-length":50,"text-margin":10,"font-size":12}</textarea><script>  var code = document.getElementById("flowchart-0-code").value;  var options = JSON.parse(decodeURIComponent(document.getElementById("flowchart-0-options").value));  var diagram = flowchart.parse(code);  diagram.drawSVG("flowchart-0", options);</script><div id="footnotes"><hr><div id="footnotelist"><ol style="list-style:none; padding-left: 0;"><li id="fn:1"><span style="display: inline-block; vertical-align: top; padding-right: 10px;">1.</span><span style="display: inline-block; vertical-align: top;">持续集成：Continuous Integration，简称CI: 在一个项目中，任何人对代码库的任何改动，都会触发CI服务器自动对项目进行构建，自动运行测试，甚至自动部署到测试环境。这样做的好处就是，随时发现问题，随时修复。因为修复问题的成本随着时间的推移而增长，越早发现，修复成本越低。</span><a href="#fnref:1" rev="footnote"> ↩</a></li><li id="fn:2"><span style="display: inline-block; vertical-align: top; padding-right: 10px;">2.</span><span style="display: inline-block; vertical-align: top;"><a href="https://travis-ci.org/" target="_blank" rel="noopener">Travis CI</a>是在线托管的开源持续集成构建项目，不需要搭建服务器，它采用yaml格式且对开源项目免费。</span><a href="#fnref:2" rev="footnote"> ↩</a></li></ol></div></div></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/解决办法/" rel="tag"># 解决办法</a>
+          
+            <a href="/tags/hexo/" rel="tag"># hexo</a>
+          
+            <a href="/tags/心态爆炸/" rel="tag"># 心态爆炸</a>
+          
+            <a href="/tags/travis-ci/" rel="tag"># travis ci</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/16/wordpress-plugin-update-ftp-permission/" rel="next" title="解决wordpress安装升级插件需要ftp信息的方法">
+                <i class="fa fa-chevron-left"></i> 解决wordpress安装升级插件需要ftp信息的方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/24/hexo-theme-next-set-sidebar-to-left/" rel="prev" title="让NexT主题的Muse模板侧边栏居左">
+                让NexT主题的Muse模板侧边栏居左 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="overlay"></div>
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <a href="/about" class="site-author-image" rel="start" style="border:none">
+                <img class="site-author-image" itemprop="image"
+                  src="/images/teresa.jpg"
+                  alt="Katerina Wang" />
+              </a>
+            
+              <p class="site-author-name" itemprop="name">Katerina Wang</p>
+              <p class="site-description motion-element" itemprop="description">a personal blog about tech and life</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives">
+                
+                    <span class="site-state-item-count">21</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">12</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">30</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://instagram.com/katlikeskitten" target="_blank" title="Instagram"><i class="fa fa-fw fa-instagram"></i>Instagram</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://weibo.com/katerinasue" target="_blank" title="Weibo"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          <div id="days"></div>
+</script>
+<script language="javascript">
+function show_date_time(){
+window.setTimeout("show_date_time()", 1000);
+BirthDay=new Date("04/25/2017 00:00:00");
+today=new Date();
+timeold=(today.getTime()-BirthDay.getTime());
+sectimeold=timeold/1000
+secondsold=Math.floor(sectimeold);
+msPerDay=24*60*60*1000
+e_daysold=timeold/msPerDay
+daysold=Math.floor(e_daysold);
+e_hrsold=(e_daysold-daysold)*24;
+hrsold=setzero(Math.floor(e_hrsold));
+e_minsold=(e_hrsold-hrsold)*60;
+minsold=setzero(Math.floor((e_hrsold-hrsold)*60));
+seconds=setzero(Math.floor((e_minsold-minsold)*60));
+document.getElementById('days').innerHTML="已运行"+daysold+"天"+hrsold+"小时"+minsold+"分"+seconds+"秒";
+}
+function setzero(i){
+if (i<10)
+{i="0" + i};
+return i;
+}
+show_date_time();
+</script>
+<div class="player-container">
+<div id="side-aplayer">> 听首歌吧 <</div>
+</div>
+<link rel="stylesheet" href="/assets/css/APlayer.min.css" class="aplayer-style-marker">
+<script src="/assets/js/APlayer.min.js" class="aplayer-script-marker"></script>
+<div class="aplayer"
+    data-id="64005063"
+    data-server="netease"
+    data-type="playlist"
+    data-order="random"
+    data-list-max-height="200px"
+    data-theme="#777777"
+    data-list-folded="true"
+    data-volume=“0.2”
+</div>
+<script src="/assets/js/Meting.min.js" class="meting-script-marker"></script>
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于"><span class="nav-number">1.</span> <span class="nav-text">关于</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#工作原理流程图"><span class="nav-number">1.1.</span> <span class="nav-text">工作原理流程图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体方法"><span class="nav-number">1.2.</span> <span class="nav-text">具体方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些问题"><span class="nav-number">2.</span> <span class="nav-text">一些问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-git分支push问题"><span class="nav-number">2.1.</span> <span class="nav-text">1. git分支push问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#先讲一下git远程分支的一些命令："><span class="nav-number">2.1.1.</span> <span class="nav-text">先讲一下git远程分支的一些命令：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他方法"><span class="nav-number">2.1.2.</span> <span class="nav-text">其他方法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#方法1：push前先将远程repository修改pull下来"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">方法1：push前先将远程repository修改pull下来</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方法2：若不想merge远程和本地修改，可以先创建新的分支"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">方法2：若不想merge远程和本地修改，可以先创建新的分支</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-git-push-theme-next无内容"><span class="nav-number">2.2.</span> <span class="nav-text">2. git push theme/next无内容</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-travis-build-fatal-error"><span class="nav-number">2.3.</span> <span class="nav-text">3. travis build fatal error</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-travis-log-提示-git-permission-denied"><span class="nav-number">2.4.</span> <span class="nav-text">4. travis log 提示 git permission denied</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用方法"><span class="nav-number">3.</span> <span class="nav-text">使用方法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart" style="color:#ff6262;"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Katerina Wang</span>
+
+  
+
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.0.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.0.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.0.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.0.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.0.4"></script>
+
+
+
+  
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  
+  
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(function (item) {
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'nwkYS8EnCWQdJ6kM6Rjit9YS-gzGzoHsz',
+        appKey: 'whwn7jc1FQg02JFVspYRXGIv',
+        placeholder: '( >﹏<。)～可以的话，留下点什么吧',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/canvasline.js"></script>
+  <script type="text/javascript" src="/js/src/scrollnav.js"></script>
+<!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-backstretch/2.0.4/jquery.backstretch.min.js"></script>
+  <script>
+    $("body").backstretch("/images/bgi.png")
+  </script> -->
+<!--   <div class="backstretch">
+    <img id="bgi" src="/images/bgi.png">
+  </div> -->
+<script src="/live2dw/lib/L2Dwidget.min.js?0c58a1486de42ac6cc1c59c7d98ae887"></script><script>L2Dwidget.init({"model":{"jsonPath":"/live2dw/assets/assets/shizuku.model.json"},"display":{"position":"right"},"mobile":{"show":false},"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/"});</script></body>
+</html>
